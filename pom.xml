@@ -4,22 +4,24 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.fxjavadevblog</groupId>
 	<artifactId>api-impl-demo</artifactId>
-	<version>0.0.10-SNAPSHOT</version>
+	<version>0.0.11-SNAPSHOT</version>
 	<name>API Implementation Demo</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
 
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>1.12.2.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.6.0.Final</quarkus.platform.version>
 		<quarkus-plugin.version>${quarkus.platform.version}</quarkus-plugin.version>
-		<lombok.version>1.18.14</lombok.version>
-		<commons-lang.version>3.11</commons-lang.version>
-
+		<lombok.version>1.18.22</lombok.version>
+		<tiny-preconditions.version>1.0.8</tiny-preconditions.version>
+		<commons-lang.version>3.12.0</commons-lang.version>
+		<commons-collections.version>4.4</commons-collections.version>
+		<commons-beanutils.version>1.9.4</commons-beanutils.version>
 		<surefire-plugin.version>2.22.2</surefire-plugin.version>
 	</properties>
 
@@ -29,6 +31,18 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.13.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>6.5.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
@@ -63,19 +77,19 @@
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.4</version>
+			<version>${commons-beanutils.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
-			<version>4.4</version>
+			<version>${commons-collections.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.fxjavadevblog</groupId>
 			<artifactId>tiny-preconditions</artifactId>
-			<version>1.0.8</version>
+			<version>${tiny-preconditions.version}</version>
 		</dependency>
 
 		<dependency>
@@ -148,7 +162,16 @@
 	</dependencies>
 
 	<build>
+
+
 		<plugins>
+
+			<!-- generation du site -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.9.1</version>
+			</plugin>
 
 			<!-- compilation classique avec MAVEN -->
 			<plugin>
@@ -192,6 +215,20 @@
 				</configuration>
 			</plugin>
 
+			<!-- deps checks -->
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>6.5.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -199,7 +236,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/fxrobin/api-impl-demo</url>
+			<url>https://maven.pkg.github.com/casid-sand/api-impl-demo</url>
 		</repository>
 	</distributionManagement>
 
