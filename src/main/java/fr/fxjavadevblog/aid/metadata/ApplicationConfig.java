@@ -19,7 +19,8 @@ import fr.fxjavadevblog.aid.utils.jaxrs.media.SpecificMediaType;
 // this definition is merged with resources/META-INF/openapi.yml
 
 @OpenAPIDefinition (
-	info = @Info(title = ApplicationConfig.APP_TITLE, version = ApplicationConfig.APP_VERSION),
+		
+	info = @Info(title = "Best Practises API DEMO", version="1.0.0"),	
 	servers = @Server(url = ApplicationConfig.API_FULL_PATH ),
 	components = @Components(
 					responses =	{
@@ -31,9 +32,7 @@ import fr.fxjavadevblog.aid.utils.jaxrs.media.SpecificMediaType;
 					schemas = {
 						@Schema(name = ApplicationConfig.SCHEMA_API_ERROR, 
 								implementation = ApiError.class)
-					}
-				
-					
+					}				
 			)
 )
 
@@ -42,14 +41,9 @@ import fr.fxjavadevblog.aid.utils.jaxrs.media.SpecificMediaType;
 
 public class ApplicationConfig extends Application {
 	
-	// these constants are used by OpenApi definition and by the response of /health
+	// these are used by OpenApi definition and by the response of /health
 	
-	
-	public static final String APP_NAME = "api-impl-demo";
-	public static final String APP_TITLE = "API for Atari ST Floppy Catalog";
-	public static final String APP_VERSION = "0.0.10";
-	
-	public static final String ROOT_PATH = "/" + APP_NAME;
+	public static final String ROOT_PATH = "/api-impl-demo";
 	
 	public static final String API_VERSION = "v1";
 	public static final String API_ENDPOINT_BASEPATH = "api";	

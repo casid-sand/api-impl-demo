@@ -1,6 +1,7 @@
 package fr.fxjavadevblog.aid.api.videogame;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -56,6 +57,11 @@ public class VideoGame implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "GENRE", nullable = false)
     private Genre genre;
+    
+    @Getter
+    @Setter
+    @Column(name = "PRICE", nullable = true)
+    private BigDecimal price;
 
     @Version
     @Getter

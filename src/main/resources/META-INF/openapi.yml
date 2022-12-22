@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.0
 info:
-  title: <overriden by annotation. see Application class>
+  title: ${project.name}
   description: "Give access (CRUD) to every video games of the famous 90's computer : ATARI ST."
   contact:
     name: François-Xavier Robin
@@ -10,7 +10,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.fxjavadevblog.fr
-  version: <overriden by annotation see Application class>
+  version: ${project.version}
   x-data-atari: ST, STF, STFM, STE, MEGA ST, MEGA STE, FALCON
   x-data-protection: NONE
 
