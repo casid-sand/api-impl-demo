@@ -8,10 +8,10 @@ import javax.ws.rs.ext.ParamConverter;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Generic JAX-RS Enum converter based on the jackson JsonProperty annotation to
@@ -22,10 +22,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param <T>
  */
 
+@Slf4j
 public class GenericEnumConverter<T extends Enum<T>> implements ParamConverter<T>, Converter
-{
-    private static final Logger log = LoggerFactory.getLogger(GenericEnumConverter.class);
-    
+{ 
     /**
      * bi-directionnal Map to store enum value as key and its string representation as value.
      * The string representation is retrieved through the JsonProperty annotation put on the enum constant. 

@@ -8,10 +8,9 @@ import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import fr.fxjavadevblog.aid.utils.jaxrs.converters.GenericEnumConverter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS provider for Genre conversion. This converter is registered because of
@@ -21,9 +20,9 @@ import fr.fxjavadevblog.aid.utils.jaxrs.converters.GenericEnumConverter;
  */
 
 @Provider
+@Slf4j
 public class GenreConverterProvider implements ParamConverterProvider
 {
-    private static final Logger log = LoggerFactory.getLogger(GenreConverterProvider.class);
     private static final GenericEnumConverter<Genre> converter = GenericEnumConverter.of(Genre.class);
 
     static

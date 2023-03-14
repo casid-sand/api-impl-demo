@@ -47,6 +47,7 @@ import fr.fxjavadevblog.aid.utils.jaxrs.media.SpecificMediaType;
 import fr.fxjavadevblog.aid.utils.jaxrs.pagination.Pagination;
 import fr.fxjavadevblog.aid.utils.jaxrs.pagination.QueryParameterUtils;
 import fr.fxjavadevblog.aid.utils.pagination.PagedResponse;
+import fr.fxjavadevblog.aid.utils.panache.PanacheUtils;
 import fr.fxjavadevblog.aid.utils.validation.SortableOn;
 import fr.fxjavadevblog.preconditions.Checker;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -114,27 +115,13 @@ public class VideoGameResource
 	                        @Context
 	                        final UriInfo uriInfo)
     {
-        log.info("findAll video games. Pagination : {}", pagination); 	
-        
-        PanacheQuery<VideoGame> query;
+        log.info("findAll video games. Pagination : {}", pagination); 	               
         Sort sort = QueryParameterUtils.createSort(sortingClause);
-        
-        Filtering filtering = Filtering.of(VideoGame.class, uriInfo);            
-        
-        if (!filtering.isFilterPresent())
-        {
-        	query = videoGameRepository.findAll(sort);
-        }
-        else
-        {
-        	String hqlQueryString = filtering.getQuery();
-        	log.info("query string : {}", hqlQueryString);
-        	query = videoGameRepository.find(hqlQueryString, sort, filtering.getParameterMap());        	
-        }        
-      
-        query = query.page(pagination.getPage(), pagination.getSize());       
-    	return PagedResponse.builder().query(query).fieldSetExpression(fields).build().getResponse();
-    }
+        Filtering filter = Filtering.of(VideoGame.class, uriInfo);                               
+        PanacheQuery<VideoGame> query = PanacheUtils.buildPanacheQuery(videoGameRepository, sort, filter);
+        PanacheUtils.applyPagination(query, pagination);      
+    	return PagedResponse.build(query,fields).getResponse();
+    }     
     
     @GET
     @Path("/{id}")

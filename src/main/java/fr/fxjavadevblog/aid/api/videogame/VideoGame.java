@@ -31,40 +31,34 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 // CDI Annotation
 @Dependent
-
 @JsonFilter(FieldSet.ID)
-
 // JPA Annotation
 @Entity
 @Table(name = "VIDEO_GAME")
 public class VideoGame implements Serializable
 {
-
     @Id
     @Getter
     @Column(length = 36)
     @Inject
     @InjectUUID
-    String id;
+    private String id;
 
-    @Getter
-    @Setter
+    @Getter @Setter
     @Column(name = "NAME", nullable = false, unique = true, columnDefinition = "varchar_ignorecase")
     private String name;
 
-    @Getter
-    @Setter
+    @Getter @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "GENRE", nullable = false)
     private Genre genre;
     
-    @Getter
-    @Setter
+    @Getter @Setter
     @Column(name = "PRICE", nullable = true)
     private BigDecimal price;
 
-    @Version
     @Getter
+    @Version
     @Column(name = "VERSION")
     private Long version;
 }

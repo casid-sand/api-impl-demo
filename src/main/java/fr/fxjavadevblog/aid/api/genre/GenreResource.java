@@ -101,7 +101,7 @@ public class GenreResource
 		Sort sort = QueryParameterUtils.createSort(sortingClause);
 		PanacheQuery<VideoGame> query = videoGameRepository.findByGenre(genre, sort)
 				                                           .page(pagination.getPage(), pagination.getSize());
-		return  PagedResponse.builder().query(query).build().getResponse();
+		return  PagedResponse.build(query).getResponse();
 	}
 
 }

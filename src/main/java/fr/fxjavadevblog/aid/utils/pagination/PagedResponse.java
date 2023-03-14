@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.fxjavadevblog.aid.utils.jaxrs.fields.FieldSet;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,7 +19,6 @@ import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
 public class PagedResponse <T> 
 {
@@ -33,20 +31,44 @@ public class PagedResponse <T>
 	private List<T> data;
 	
 	@JsonIgnore
-	private PanacheQuery<?> query;
+	private PanacheQuery<T> query;
 	
 	@JsonIgnore
 	private String fieldSetExpression;
 	
+	public static <T> PagedResponse<T> build(PanacheQuery<T> query, String fieldSetExpression)
+	{
+		PagedResponse<T> pagedResponse = new PagedResponse<>();
+		pagedResponse.query = query;
+		pagedResponse.fieldSetExpression = fieldSetExpression;
+		return pagedResponse;
+	}
+	
+	public static <T> PagedResponse<T> build(PanacheQuery<T> query)
+	{
+		return build(query,null);
+	}
+	
 	@JsonIgnore
 	public Response getResponse()
 	{
-	  PagedResponse<?> pagedResponse =	PagedQueryWrapper.wrap(query);
-	  String result = FieldSet.getJson(fieldSetExpression, pagedResponse);
+	  this.wrap(query);
 	  return Response.status(Response.Status.PARTIAL_CONTENT)
-	   .header("Resource-Count", pagedResponse.getMetadata().getResourceCount())
-	   .entity(result)
+	   .header("Resource-Count", this.getMetadata().getResourceCount())
+	   .entity(FieldSet.getJson(fieldSetExpression, this))
 	   .build();
+	}
+	
+	private void wrap(PanacheQuery<T> query) 
+	{	
+		this.metadata = Metadata.builder()
+		  .resourceCount(query.count())
+		  .pageCount(query.pageCount())
+		  .currentPage(query.page().index)
+		  .build();		
+    	  this.data = query.list();
 	}
 
 }
+
+

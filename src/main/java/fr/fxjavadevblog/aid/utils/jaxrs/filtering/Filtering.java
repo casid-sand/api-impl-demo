@@ -10,7 +10,6 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
@@ -21,6 +20,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections4.CollectionUtils;
 
 import fr.fxjavadevblog.aid.api.exceptions.ApiException;
+import fr.fxjavadevblog.aid.utils.commons.EnumUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +35,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Filtering 
 {
+	private static final Set <String> reservedWords = Set.of("page","size","sort","fields");			                                         	
+	
+	private static final Map<String, FilterOperation> operationAliases;
+	
+	static
+	{
+		// initialization of the map of operatiAliases regarding the FilterOperatio enum
+		// the hsql operation will be the key of the map associated to the enum value 
+		operationAliases = EnumUtils.convertToMap(FilterOperation.class, 
+												  FilterOperation::getApiOperation,
+												  FilterOperation::getValue);
+		log.info("Operation MAP : {}", operationAliases);
+	}
+
+	private static final Pattern pattern;
+	
+	static 
+	{
+		// dynamically constructs the pattern matcher to validate any filter operations
+		// for example this results into : "^(like|eq|gte|lte){1}(:)(.*)"
+		String regexp = operationAliases.keySet().stream().collect(Collectors.joining("|","^(","){1}(:)(.*)"));
+		log.info("operation validation pattern : {}", regexp);
+		pattern = Pattern.compile(regexp);
+	}
+	
+	
 	@Context
 	@Getter
 	@Setter
@@ -45,20 +71,6 @@ public class Filtering
 	
 	private List <Filter> filters;
 	
-	private static Set <String> reservedWords = Stream.of("page","size","sort","fields")
-			                                          .collect(Collectors.toSet());
-	
-	private static final Map<String, FilterOperation> operationAliases = new HashMap<>();
-	
-	private static final Pattern pattern = Pattern.compile("^(like|eq|gte|lte){1}(:)(.*)");
-	
-	static
-	{
-		operationAliases.put("equ", FilterOperation.EQUALS);
-		operationAliases.put("like", FilterOperation.LIKE);
-		operationAliases.put("gte",  FilterOperation.GREATER_THAN);
-		operationAliases.put("gte",  FilterOperation.GREATER_THAN);		
-	}	
 	
 	public static Filtering of(Class <?> clazz, UriInfo uriInfo)
 	{

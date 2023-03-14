@@ -20,8 +20,6 @@ import io.restassured.specification.RequestSpecification;
  */
 
 @QuarkusTest
-
-
 class VideoGameHttpTest 
 {
 	
@@ -73,8 +71,7 @@ class VideoGameHttpTest
 	      		.body(containsString("resourceCount"))
                 .body(containsString("resourceCount"))
                 .body(containsString("pageCount"))
-                .body(containsString("currentPage")); 
-	      
+                .body(containsString("currentPage")); 	      
     }
     
 }
